@@ -26,6 +26,21 @@ def login():
     user.pop("_id")
     return jsonify({"user": user}), 200
 
+@app.route("/api/users/<dni>", methods=["GET"])
+def get_user(dni):
+    user = users.find_one({"dni": dni})
+    if not user:
+        return jsonify({"error": "Usuario no encontrado"}), 404
+    user.pop("_id")
+    return jsonify(user), 200
+
+@app.route("/api/users/<dni>", methods=["PUT"])
+def update_user(dni):
+    data = request.get_json()
+    result = users.update_one({"dni": dni}, {"$set": data})
+    if result.matched_count == 0:
+        return jsonify({"error": "Usuario no encontrado"}), 404
+    return jsonify({"message": "Perfil actualizado correctamente"}), 200
+
 if __name__ == "__main__":
     app.run()
-
