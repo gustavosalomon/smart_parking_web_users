@@ -1,3 +1,4 @@
+import os
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from pymongo import MongoClient
@@ -5,9 +6,16 @@ from pymongo import MongoClient
 app = Flask(__name__)
 CORS(app)
 
-client = MongoClient("MONGO_URI")
+# Leer URI desde las variables de entorno
+MONGO_URI = os.environ.get("MONGO_URI")
+
+if not MONGO_URI:
+    raise ValueError("Falta la variable de entorno MONGO_URI")
+
+# Conexión con MongoDB Atlas
+client = MongoClient(MONGO_URI)
 db = client["smart_parking_web"]
-col = db["users"]
+users = db["users"]
 
 @app.route("/api/users/register", methods=["POST"])
 def register():
@@ -23,7 +31,7 @@ def login():
     user = users.find_one({"dni": data["dni"], "password": data["password"]})
     if not user:
         return jsonify({"error": "Credenciales incorrectas"}), 401
-    user.pop("_id")
+    user.pop("_id", None)
     return jsonify({"user": user}), 200
 
 @app.route("/api/users/<dni>", methods=["PUT"])
@@ -40,7 +48,7 @@ def get_user_profile(dni):
     user = users.find_one({"dni": dni})
     if not user:
         return jsonify({"error": "Usuario no encontrado"}), 404
-    user.pop("_id")
+    user.pop("_id", None)
     return jsonify({"user": user})
 
 if __name__ == "__main__":
