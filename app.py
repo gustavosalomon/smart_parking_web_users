@@ -5,7 +5,7 @@ from pymongo import MongoClient
 app = Flask(__name__)
 CORS(app)
 
-client = MongoClient("mongodb+srv://admin:admin123@cluster0.2owahcw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+client = MongoClient("MONGO_URI")
 db = client["smart_parking_web"]
 users = db["users"]
 
