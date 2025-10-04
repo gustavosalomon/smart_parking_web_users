@@ -7,7 +7,7 @@ CORS(app)
 
 client = MongoClient("MONGO_URI")
 db = client["smart_parking_web"]
-users = db["users"]
+col = db["users"]
 
 @app.route("/api/users/register", methods=["POST"])
 def register():
