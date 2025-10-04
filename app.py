@@ -6,7 +6,7 @@ app = Flask(__name__)
 CORS(app)
 
 client = MongoClient("mongodb+srv://admin:admin123@cluster0.2owahcw.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
-db = client["smart_parking_web"]
+db = client["smart_parking"]
 users = db["users"]
 
 @app.route("/api/users/register", methods=["POST"])
